@@ -1,8 +1,6 @@
-import type { GetStaticProps, NextPage } from 'next'
-import Head from 'next/head'
-import Link from 'next/link'
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import Head from 'next/head';
+import Link from 'next/link';
 import { client } from '../api/client';
 import styles from '../styles/style.module.css';
 
@@ -17,20 +15,8 @@ type blog = {
   img: string;
 }
 
-const Home: NextPage<props> = (props) => {
-  const { blogs } = props;
-  const [fetchData, setFetchData] = useState(blogs);
-
-  const fetcher = async(endpoint: string) => await client.get({ endpoint: endpoint });
-  const {data: fetchBlogs, mutate} = useSWR('blogs', fetcher, {
-    fallback: blogs,
-    revalidateOnFocus: false
-  })
-
-  useEffect(() => {
-    mutate();
-    if (fetchBlogs) setFetchData(fetchBlogs.contents)
-  }, [fetchBlogs])
+const BlogSSR: NextPage<props> = (props) => {
+  const { blogs } = props
 
   return (
     <>
@@ -40,14 +26,14 @@ const Home: NextPage<props> = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1>Blog Lists(SG)</h1>
+        <h1>Blog Lists(SSR)</h1>
         <div className={styles.nav}>
           <Link href='/'>TOP</Link>
           <Link href='/blog-csr'>CSR</Link>
           <Link href='/blog-ssr'>SSR</Link>
         </div>
         <ul className={styles.list}>
-          {fetchData.map((blog: blog) => (
+          {blogs.map((blog) => (
             <li key={blog.id}>
               <Link href={`/blog/${blog.id}`}>
                 {blog.title}
@@ -57,16 +43,15 @@ const Home: NextPage<props> = (props) => {
         </ul>
       </main>
     </>
-  )
-}
+  );
+};
 
-export const getStaticProps: GetStaticProps = async () => {
+export async function getServerSideProps() {
   const blogs = await client.get({ endpoint: 'blogs' })
 
   return {
-    props: { blogs: blogs.contents },
-    revalidate: 3
+    props: { blogs: blogs.contents }
   };
 }
 
-export default Home
+export default BlogSSR;
