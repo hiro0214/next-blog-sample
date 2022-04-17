@@ -28,7 +28,7 @@ const BlogSSR: NextPage<props> = (props) => {
       <main>
         <h1>Blog Lists(SSR)</h1>
         <div className={styles.nav}>
-          <Link href='/'>TOP</Link>
+          <Link href='/'>SG</Link>
           <Link href='/blog-csr'>CSR</Link>
           <Link href='/blog-ssr'>SSR</Link>
         </div>

@@ -29,7 +29,7 @@ const BlogCSR: NextPage = () => {
       <main>
         <h1>Blog Lists(CSR)</h1>
         <div className={styles.nav}>
-          <Link href='/'>TOP</Link>
+          <Link href='/'>SG</Link>
           <Link href='/blog-csr'>CSR</Link>
           <Link href='/blog-ssr'>SSR</Link>
         </div>
